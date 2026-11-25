@@ -7,8 +7,9 @@
 export_r_script(x, data_name = "my_data", file = NULL)
 }
 \arguments{
-\item{x}{An object of class \code{"statarbor_result"} returned by
-\code{\link[=auto_compare]{auto_compare()}}.}
+\item{x}{A \code{statarbor} result object returned by \code{\link[=auto_compare]{auto_compare()}},
+\code{\link[=compare_paired]{compare_paired()}}, \code{\link[=auto_repeated]{auto_repeated()}}, \code{\link[=analyze_count]{analyze_count()}},
+\code{\link[=analyze_ancova]{analyze_ancova()}}, or \code{\link[=analyze_rcbd]{analyze_rcbd()}}.}
 
 \item{data_name}{Character scalar naming the data frame object to reference
 in the generated script (default \code{"my_data"}).}
@@ -23,8 +24,8 @@ written to disk).
 }
 \description{
 Generates an executable, human-readable R script that reproduces both the
-high-level \code{statarbor::auto_compare()} workflow and the underlying base R /
-\code{car} / \code{rstatix} calls for complete analytical transparency.
+high-level \code{statarbor} workflow and the underlying base R / reference package
+verification calls for complete analytical transparency.
 }
 \examples{
 res <- auto_compare(iris, response = "Sepal.Length", group = "Species")

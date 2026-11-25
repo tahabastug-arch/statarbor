@@ -37,7 +37,9 @@ Suggests:
     logistf,
     ordinal,
     knitr,
-    rmarkdown
+    rmarkdown,
+    MASS,
+    lme4
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Depends: 

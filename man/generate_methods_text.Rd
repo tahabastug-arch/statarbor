@@ -7,8 +7,9 @@
 generate_methods_text(x, lang = c("en", "tr"), include_citation = TRUE)
 }
 \arguments{
-\item{x}{An object of class \code{"statarbor_result"} returned by
-\code{\link[=auto_compare]{auto_compare()}}.}
+\item{x}{A \code{statarbor} result object returned by \code{\link[=auto_compare]{auto_compare()}},
+\code{\link[=compare_paired]{compare_paired()}}, \code{\link[=auto_repeated]{auto_repeated()}}, \code{\link[=analyze_count]{analyze_count()}},
+\code{\link[=analyze_ancova]{analyze_ancova()}}, or \code{\link[=analyze_rcbd]{analyze_rcbd()}}.}
 
 \item{lang}{Output language: \code{"en"} for English (default) or \code{"tr"} for
 Turkish.}
@@ -23,7 +24,9 @@ A character scalar containing the formatted methods paragraph.
 Produces a manuscript-ready statistical methods paragraph (in English or
 Turkish) summarizing the assumption checks, routing decisions, post-hoc
 procedures, compact letter display (CLD) logic, and effect size metrics
-applied to a \code{"statarbor_result"} object.
+applied to \code{statarbor} analysis objects (\code{"statarbor_result"},
+\code{"statarbor_paired"}, \code{"statarbor_repeated"}, \code{"statarbor_count"},
+\code{"statarbor_ancova"}, or \code{"statarbor_rcbd"}).
 }
 \examples{
 res <- auto_compare(iris, response = "Sepal.Length", group = "Species")
