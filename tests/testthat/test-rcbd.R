@@ -49,7 +49,7 @@ test_that("analyze_rcbd random block works when lme4 is available", {
   skip_if_not_installed("lme4")
   set.seed(606)
   grid <- expand.grid(trt = c("A", "B", "C"), blk = paste0("B", 1:6))
-  grid$y <- rep(c(5, 10, 16), times = 6) + rep(rnorm(6, 0, 2), each = 3) + rnorm(18, 0, 0.7)
+  grid$y <- rep(c(5, 10, 16), times = 6) + rep(c(-3, -2, -1, 1, 2, 3), each = 3) + rnorm(18, 0, 0.7)
 
   res <- analyze_rcbd(grid, response = "y", treatment = "trt", block = "blk",
                       block_type = "random")
