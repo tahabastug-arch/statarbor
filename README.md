@@ -1,5 +1,8 @@
 # statarbor
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24534800.svg)](https://doi.org/10.5281/zenodo.24534800)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 **Assumption-Guided Statistical Decision Engine, Special-Character-Safe CLD, and Bilingual (EN/TR) Reporting for R**
 
 `statarbor` is an open-source R package (GNU GPL >= 3) and bundled interactive Shiny web application designed for experimental researchers in agriculture, plant biotechnology, and life sciences.
@@ -38,6 +41,14 @@ cat(generate_methods_text(res_fw, lang = "en"), "\n")
 # Launch the interactive bilingual Shiny app
 run_app()
 ```
+
+## Citation
+
+If you use `statarbor` in published research, please cite:
+
+> Bastug, T. (2026). *statarbor: Assumption-Guided Statistical Analysis, CLD Visualization, and Bilingual Reporting* (Version 0.1.0). Zenodo. https://doi.org/10.5281/zenodo.24534800
+
+You can also retrieve the BibTeX entry directly in R via `citation("statarbor")`.
 
 ## Validation & License
 
