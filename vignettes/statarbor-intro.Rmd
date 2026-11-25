@@ -1,0 +1,168 @@
+---
+title: "Getting Started with statarbor: Assumption-Guided Analysis, CLD, and Numerical Validation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with statarbor}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4.6,
+  dpi = 150
+)
+```
+
+## Overview
+
+`statarbor` provides an end-to-end, assumption-guided statistical workflow for
+experimental datasets in agriculture, plant biotechnology, and life sciences.
+Rather than requiring users to manually run assumption diagnostics, select
+matching post-hoc procedures, construct compact letter displays (CLD), and
+format manuscript tables separately, `statarbor` unifies these steps into a
+transparent, reproducible R package and bilingual (English/Turkish) Shiny
+interface.
+
+### Automated Decision Tree
+
+For every numeric response evaluated across categorical groups, `auto_compare()`
+applies the following routing hierarchy at significance threshold $\alpha$:
+
+| Diagnostic Condition | Routed Hypothesis Test | Post-Hoc Procedure | Effect Size |
+| :--- | :--- | :--- | :--- |
+| Any group with zero variance ($s^2 = 0$) | Kruskal-Wallis | Dunn (Bonferroni / Holm / BH) | $\varepsilon^2$ |
+| Shapiro-Wilk normality violated ($p < \alpha$) | Kruskal-Wallis | Dunn (Bonferroni / Holm / BH) | $\varepsilon^2$ |
+| Normal, but Levene homogeneity violated ($p < \alpha$) | Welch one-way ANOVA | Games-Howell (native) | Estimated $\omega^2$ |
+| Normality and homogeneity both satisfied | One-way ANOVA | Tukey HSD | $\eta^2$, $\omega^2$ |
+
+## 1. Benchmark Dataset (`thermal_stress`)
+
+`statarbor` ships with a synthetic 120-observation thermal stress dataset
+(`thermal_stress`) engineered to exercise all statistical pathways simultaneously:
+
+```{r load-data}
+library(statarbor)
+data(thermal_stress)
+str(thermal_stress)
+```
+
+## 2. Automated Group Comparisons & Special-Character-Safe CLD
+
+Running `auto_compare()` on three distinct traits automatically triggers all
+three decision pathways:
+
+```{r auto-compare}
+res_emb <- auto_compare(thermal_stress, response = "embryo_mm", group = "treatment")
+res_fw  <- auto_compare(thermal_stress, response = "fresh_weight_g", group = "treatment")
+res_sh  <- auto_compare(thermal_stress, response = "shoot_cm", group = "treatment")
+
+print(res_emb)
+print(res_fw)
+print(res_sh)
+```
+
+## 3. Numerical Cross-Validation Against Base R Reference Implementations
+
+To verify computational accuracy, the table below compares `statarbor` test
+statistics and p-values directly against base R (`stats::aov()`,
+`stats::oneway.test()`, `stats::kruskal.test()`):
+
+```{r cross-validation}
+ref_aov <- stats::anova(stats::aov(embryo_mm ~ treatment, data = thermal_stress))
+ref_w   <- stats::oneway.test(fresh_weight_g ~ treatment, data = thermal_stress, var.equal = FALSE)
+ref_kw  <- stats::kruskal.test(shoot_cm ~ treatment, data = thermal_stress)
+
+val_tbl <- data.frame(
+  Response = c("embryo_mm", "fresh_weight_g", "shoot_cm"),
+  Routed_Method = c(res_emb$method, res_fw$method, res_sh$method),
+  statarbor_Stat = round(c(res_emb$statistic, res_fw$statistic, res_sh$statistic), 6),
+  BaseR_Stat = round(c(ref_aov$`F value`[1], as.numeric(ref_w$statistic), as.numeric(ref_kw$statistic)), 6),
+  Max_Abs_Diff_Stat = signif(abs(c(
+    res_emb$statistic - ref_aov$`F value`[1],
+    res_fw$statistic - as.numeric(ref_w$statistic),
+    res_sh$statistic - as.numeric(ref_kw$statistic)
+  )), 3),
+  statarbor_p = signif(c(res_emb$p_value, res_fw$p_value, res_sh$p_value), 6),
+  BaseR_p = signif(c(ref_aov$`Pr(>F)`[1], as.numeric(ref_w$p.value), as.numeric(ref_kw$p.value)), 6),
+  stringsAsFactors = FALSE
+)
+
+knitr::kable(val_tbl, caption = "Numerical Cross-Validation: statarbor vs. Base R Reference Functions")
+```
+
+## 4. Cleaning Raw Experimental Spreadsheets
+
+Raw laboratory files often label control replicates individually (e.g.,
+`"Control 1"`, `"Control 2"`, ..., `"Control 63"`) or store factorial levels in
+separate columns. `merge_group_prefix()` and `combine_factors()` standardize
+these columns cleanly:
+
+```{r data-prep}
+raw_lab <- data.frame(
+  grp = c("Control 1", "Control 2", "Control 3", "+4C - 1W", "+4C - 1W"),
+  temp = c("Ctrl", "Ctrl", "Ctrl", "4C", "4C"),
+  week = c("0W", "0W", "0W", "1W", "1W"),
+  shoot = c(10.5, 11.2, 9.8, 7.6, 6.9),
+  stringsAsFactors = FALSE
+)
+
+clean_lab <- merge_group_prefix(raw_lab, column = "grp", prefix = "Control")
+clean_lab <- combine_factors(clean_lab, cols = c("temp", "week"), sep = " - ")
+clean_lab
+```
+
+## 5. Publication-Ready CLD Figures and Multivariate Plots
+
+```{r plots, eval = requireNamespace("ggplot2", quietly = TRUE)}
+plot(res_fw, type = "boxplot")
+plot(res_sh, type = "violin")
+```
+
+## 6. Advanced Modeling: Binary Separation (Firth), Ordinal CLM, and Factorial GLM
+
+```{r advanced}
+# 1. Two-group ploidy comparison (auto-routed t-test or Mann-Whitney U)
+compare_two_groups(thermal_stress, response = "shoot_cm", group = "ploidy")
+
+# 2. Binary germination with complete separation (100% Control, 0% -20C_1W)
+analyze_binary(thermal_stress, response = "germination", group = "treatment")
+
+# 3. Factorial Gamma-log GLM on strictly positive fresh weight
+analyze_interaction(
+  thermal_stress,
+  response = "fresh_weight_g",
+  factors = c("temperature_c", "ploidy"),
+  family = "gamma_log"
+)
+```
+
+```{r ordinal, eval = requireNamespace("ordinal", quietly = TRUE)}
+# 4. Ordered tissue viability score (0-3) via Cumulative Link Model
+analyze_ordinal(thermal_stress, response = "viability_score", group = "treatment")
+```
+
+## 7. Reproducible Methods Text, R Script Export, and Interactive Interface
+
+Every `auto_compare()` result can generate manuscript-ready English or Turkish
+methods text and an executable verification script:
+
+```{r reporting}
+cat(generate_methods_text(res_fw, lang = "en"), "\n\n")
+cat(generate_methods_text(res_fw, lang = "tr"), "\n")
+```
+
+```{r script-export}
+script_lines <- export_r_script(res_fw, data_name = "thermal_stress")
+cat(utils::head(script_lines, 18), sep = "\n")
+```
+
+To launch the interactive bilingual (English/Turkish) Shiny web application
+locally with zero coding required:
+
+```r
+statarbor::run_app()
+```

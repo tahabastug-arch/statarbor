@@ -1,0 +1,8 @@
+bibentry(
+  bibtype  = "Manual",
+  title    = "statarbor: Assumption-Guided Statistical Analysis, CLD Visualization, and Bilingual Reporting",
+  author   = person("Taha", "Bastug", email = "tahabastug@protonmail.com", role = c("aut", "cre")),
+  year     = "2026",
+  note     = "R package version 0.1.0",
+  url      = "https://github.com/tahabastug-arch/statarbor"
+)
