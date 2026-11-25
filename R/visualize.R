@@ -6,7 +6,6 @@
 format_effect_compact <- function(eff_list) {
   lbl_map <- c(
     eta_squared = "\u03b7\u00b2",
-    omega_squared = "\u03c9\u00b2",
     omega_squared = "omega^2",
     est_omega_squared = "est. omega^2",
     epsilon_squared = "\u03b5\u00b2",
@@ -386,7 +385,6 @@ export_word_report <- function(results,
   sec1_hdr <- if (is_tr) "1. Otomatik Karar \u00d6zeti Tablosu" else "1. Decision Summary Table"
   sec2_hdr <- if (is_tr) "2. De\u011fi\u015fken Bazl\u0131 Sonu\u00e7lar ve Grafikler" else "2. Variable-Level Results and Figures"
 
-  # Summary table across all analyzed responses
   sum_rows <- lapply(res_list, function(r) {
     data.frame(
       Variable = r$response,
