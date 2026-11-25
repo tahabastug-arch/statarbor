@@ -213,19 +213,19 @@ generate_methods_text <- function(x,
 
     res_tr <- if (is_param) {
       sprintf(
-        "Birey i\u00e7i art\u0131klar normallik varsay\u0131m\u0131n\u0131 sa\u011flad\u0131\u011f\u0131 i\u00e7in tekrarlı \u00f6l\u00e7\u00fcmler Greenhouse-Geisser d\u00fczeltmeli tekrarlı \u00f6l\u00e7\u00fcmler ANOVA ile de\u011ferlendirildi (F(%.2f, %.2f) = %.3f, p %s; \u03b7p\u00b2 = %.3f, \u03b7g\u00b2 = %.3f, GG \u03b5 = %.3f; %s).",
+        "Birey i\u00e7i art\u0131klar normallik varsay\u0131m\u0131n\u0131 sa\u011flad\u0131\u011f\u0131 i\u00e7in tekrarl\u0131 \u00f6l\u00e7\u00fcmler Greenhouse-Geisser d\u00fczeltmeli tekrarl\u0131 \u00f6l\u00e7\u00fcmler ANOVA ile de\u011ferlendirildi (F(%.2f, %.2f) = %.3f, p %s; \u03b7p\u00b2 = %.3f, \u03b7g\u00b2 = %.3f, GG \u03b5 = %.3f; %s).",
         x$df[1L], x$df[2L], x$statistic, p_str,
         x$effect_size["eta_p2"], x$effect_size["eta_g2"], x$effect_size["gg_epsilon"],
         x$method
       )
     } else {
       sprintf(
-        "Parametrik tekrarlı \u00f6l\u00e7\u00fcm varsay\u0131mlar\u0131 sa\u011flanmad\u0131\u011f\u0131 i\u00e7in ko\u015fullar parametrik olmayan Friedman testi ile kar\u015f\u0131la\u015ft\u0131r\u0131ld\u0131 (\u03c7\u00b2(%.0f) = %.3f, p %s; Kendall W = %.3f; %s).",
+        "Parametrik tekrarl\u0131 \u00f6l\u00e7\u00fcm varsay\u0131mlar\u0131 sa\u011flanmad\u0131\u011f\u0131 i\u00e7in ko\u015fullar parametrik olmayan Friedman testi ile kar\u015f\u0131la\u015ft\u0131r\u0131ld\u0131 (\u03c7\u00b2(%.0f) = %.3f, p %s; Kendall W = %.3f; %s).",
         x$df[1L], x$statistic, p_str, x$effect_size["kendalls_w"], x$method
       )
     }
     txt_tr <- sprintf(
-      "%s de\u011fi\u015fkeninin %d %s d\u00fczeyindeki tekrarlı \u00f6l\u00e7\u00fcmleri (n = %d tam denek) art\u0131k normalli\u011fi (Shapiro-Wilk) ve k\u00fcresellik a\u00e7\u0131s\u0131ndan de\u011ferlendirildi (\u03b1 = %s). %s Homojen alt gruplar harflendirme (CLD) y\u00f6ntemiyle \u00f6zetlendi.",
+      "%s de\u011fi\u015fkeninin %d %s d\u00fczeyindeki tekrarl\u0131 \u00f6l\u00e7\u00fcmleri (n = %d tam denek) art\u0131k normalli\u011fi (Shapiro-Wilk) ve k\u00fcresellik a\u00e7\u0131s\u0131ndan de\u011ferlendirildi (\u03b1 = %s). %s Homojen alt gruplar harflendirme (CLD) y\u00f6ntemiyle \u00f6zetlendi.",
       x$response, x$k_conditions, x$condition, x$n_subjects, alpha_str, res_tr
     )
     return(.append_citation(txt_tr, "tr", include_citation))

@@ -1,23 +1,30 @@
 Package: statarbor
-Title: Assumption-Guided Statistical Decision Engine with Automated CLD and Reporting
-Version: 0.1.0
+Title: Assumption-Guided Statistical Engine and Bilingual Reporting
+Version: 0.2.0
 Authors@R: 
     person(given = "Taha",
            family = "BAŞTUĞ",
            role = c("aut", "cre"),
            email = "tahabastug@protonmail.com",
            comment = c(ORCID = "0000-0002-2382-6302"))
-Description: Provides an assumption-guided statistical workflow for biological,
-    agricultural, and experimental datasets. Automatically evaluates group-level
-    normality, variance homogeneity, and zero-variance conditions to route
-    analyses across one-way ANOVA (Tukey HSD), Welch ANOVA (Games-Howell), and
-    Kruskal-Wallis (Dunn) tests, while generating special-character-safe compact
-    letter displays (CLD), effect sizes, reproducible R scripts, academic
-    methods text, and an interactive bilingual (EN/TR) Shiny interface.
+Description: Provides an assumption-guided statistical decision engine for
+    biological, agricultural, and experimental datasets. Automatically evaluates
+    normality, homoscedasticity, overdispersion, slope homogeneity, and
+    zero-variance edge cases to route analyses across independent multi-group
+    comparisons (ANOVA/Tukey, Welch/Games-Howell, Kruskal-Wallis/Dunn), paired
+    and repeated-measures designs (paired t/Wilcoxon, Greenhouse-Geisser
+    RM-ANOVA/Friedman), count regressions (Poisson/Negative Binomial with
+    Hauck-Donner safeguards), ANCOVA, randomized complete block designs (RCBD),
+    Firth logistic regression, ordinal cumulative link models, and factorial
+    GLMs. Generates special-character-safe compact letter displays (CLD), effect
+    sizes, reproducible R scripts, bilingual (English/Turkish) methods
+    paragraphs, formatted 'Word' reports, and an interactive 'Shiny' interface.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Depends: 
+    R (>= 3.5.0)
 Imports: 
     stats,
     car,
@@ -36,14 +43,12 @@ Suggests:
     readr,
     logistf,
     ordinal,
-    knitr,
-    rmarkdown,
     MASS,
-    lme4
+    lme4,
+    knitr,
+    rmarkdown
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-Depends: 
-    R (>= 2.10)
 LazyData: true
 URL: https://github.com/tahabastug-arch/statarbor
 BugReports: https://github.com/tahabastug-arch/statarbor/issues

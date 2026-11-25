@@ -6,6 +6,12 @@ library(shiny)
 library(DT)
 library(ggplot2)
 library(statarbor)
+mod_v02_path <- if (file.exists("mod_designs_v02.R")) {
+  "mod_designs_v02.R"
+} else {
+  system.file("shiny", "mod_designs_v02.R", package = "statarbor")
+}
+source(mod_v02_path, local = TRUE)
 
 # ==============================================================================
 # 1. BILINGUAL DICTIONARY (ASCII-SAFE UNICODE ESCAPES)
@@ -21,6 +27,7 @@ i18n_dict <- list(
   tab3 = c(en = "3. CLD Plots", tr = "3. Harfli Grafikler"),
   tab4 = c(en = "4. Advanced Models", tr = "4. \u0130leri Modeller"),
   tab5 = c(en = "5. Multivariate", tr = "5. \u00c7ok De\u011fi\u015fkenli"),
+  tab_des = c(en = "6. Experimental Designs", tr = "6. Deneme Desenleri"),
   tab6 = c(en = "About & Cite", tr = "Hakk\u0131nda & At\u0131f"),
 
   # Tab 1
@@ -374,7 +381,13 @@ ui <- fluidPage(
         )
       )
     ),
-
+    # --- TAB 6: EXPERIMENTAL DESIGNS (v0.2.0) ---
+    tabPanel(
+      title = textOutput("txt_tab_des", inline = TRUE),
+      value = "tab_designs",
+      br(),
+      designs_v02_ui("v02")
+    ),
     # --- TAB 6: ABOUT & CITE ---
     tabPanel(
       title = textOutput("txt_tab6", inline = TRUE),
@@ -404,6 +417,7 @@ server <- function(input, output, session) {
   output$txt_tab3        <- renderText(tr("tab3"))
   output$txt_tab4        <- renderText(tr("tab4"))
   output$txt_tab5        <- renderText(tr("tab5"))
+  output$txt_tab_des     <- renderText(tr("tab_des"))
   output$txt_tab6        <- renderText(tr("tab6"))
   output$txt_data_src    <- renderText(tr("data_src"))
   output$txt_upload_lbl  <- renderText(tr("upload_lbl"))
@@ -447,7 +461,15 @@ server <- function(input, output, session) {
     results = list(),
     errors = list()
   )
-
+  designs_v02_server(
+    "v02",
+    data_r = reactive({
+      cand <- list(rv$data, rv$df, rv$dataset, rv$active_data)
+      found <- Filter(is.data.frame, cand)
+      if (length(found) > 0L) found[[1L]] else NULL
+    }),
+    lang_r = reactive(input$lang)
+  )
   # Load benchmark dataset
   observeEvent(input$load_bench, {
     df <- load_benchmark_data()
@@ -1033,14 +1055,14 @@ server <- function(input, output, session) {
         h3("statarbor: Varsay\u0131m Denetimli \u0130statistiksel Karar Motoru"),
         p("statarbor; biyoloji, tar\u0131m ve deneysel bilimlerdeki ara\u015ft\u0131rmac\u0131lar i\u00e7in kod yazmadan varsay\u0131m denetimli hipotez testleri, \u00f6zel karakter korumal\u0131 harflendirme (CLD), Firth/Ordinal/GLM ileri modelleri, tekrarlanabilir R beti\u011fi ve yay\u0131na haz\u0131r Word (.docx) raporu sunan a\u00e7\u0131k kaynakl\u0131 bir R paketi ve web uygulamas\u0131d\u0131r."),
         h4("Lisans ve S\u00fcr\u00fcm"),
-        p("Lisans: GNU GPL (>= 3) | S\u00fcr\u00fcm: 0.1.0")
+        p(paste0("Lisans: GNU GPL (>= 3) | S\u00fcr\u00fcm: ", as.character(utils::packageVersion("statarbor"))))
       )
     } else {
       tagList(
         h3("statarbor: Assumption-Guided Statistical Decision Engine"),
         p("statarbor is an open-source R package and interactive web application designed for experimental researchers in agriculture, plant biotechnology, and life sciences. It automates assumption checking (Shapiro-Wilk, Levene, zero-variance screening), routes analyses across ANOVA/Tukey, Welch/Games-Howell, and Kruskal-Wallis/Dunn with special-character-safe CLD lettering, and exports reproducible R scripts, methods paragraphs, and formatted Word (.docx) reports."),
         h4("License & Version"),
-        p("License: GNU GPL (>= 3) | Version: 0.1.0")
+        p(paste0("License: GNU GPL (>= 3) | Version: ", as.character(utils::packageVersion("statarbor"))))
       )
     }
   })
