@@ -3,7 +3,7 @@ bibentry(
   title   = "statarbor: Assumption-Guided Statistical Engine and Bilingual Reporting",
   author  = person("Taha", "Bastug", email = "tahabastug@protonmail.com", role = c("aut", "cre")),
   year    = "2026",
-  note    = "R package version 0.2.0",
-  doi     = "10.5281/zenodo.24534800",
+  note    = "R package version 0.2.0 (All versions DOI: 10.5281/zenodo.24534799)",
+  doi     = "10.5281/zenodo.24542215",
   url     = "https://github.com/tahabastug-arch/statarbor"
 )
