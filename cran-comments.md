@@ -8,7 +8,6 @@
 
 * Local macOS (aarch64-apple-darwin20), R 4.3.3: 0 errors, 0 warnings, 0 notes
 * win-builder (R-devel and R-release): 0 errors, 0 warnings, 1 note (New submission)
-* macOS builder (R-release): 0 errors, 0 warnings, 1 note (New submission)
 
 ## Downstream dependencies
 

@@ -7,7 +7,8 @@ format_effect_compact <- function(eff_list) {
   lbl_map <- c(
     eta_squared = "\u03b7\u00b2",
     omega_squared = "\u03c9\u00b2",
-    est_omega_squared = "est. \u03c9\u00b2",
+    omega_squared = "omega^2",
+    est_omega_squared = "est. omega^2",
     epsilon_squared = "\u03b5\u00b2",
     cohens_d = "d",
     r = "r"
